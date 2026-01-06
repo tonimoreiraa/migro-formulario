@@ -1,0 +1,840 @@
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+    .migration-container {
+        background: #FCFAF7;
+        width: 100%;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .migration-container h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+        font-family: 'Poppins', sans-serif;
+    }
+    .migration-container form .migration-form-row {
+        display: flex;
+        margin: 32px 0;
+    }
+    .migration-form .migration-form-row .migration-input-data {
+        width: 100%;
+        height: 40px;
+        margin: 0 0;
+        position: relative;
+        font-family: 'Poppins', sans-serif;
+    }
+    .migration-input-data input,
+    .migration-input-data select {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: none;
+        font-size: 17px;
+        border-bottom: 2px solid rgba(0,0,0, 0.12);
+        background: transparent;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+    }
+    .migration-input-data select {
+        cursor: pointer;
+    }
+    .migration-input-data select::-ms-expand {
+        display: none;
+    }
+    .migration-input-data .migration-select-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .migration-input-data .migration-select-wrapper:after {
+        content: '';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #888;
+        pointer-events: none;
+    }
+    .migration-input-data input:focus ~ label,
+    .migration-input-data input:valid ~ label,
+    .migration-input-data select:focus ~ label,
+    .migration-input-data select:valid ~ label {
+        transform: translateY(-20px);
+        font-size: 14px;
+        color: #FFAF27;
+    }
+    .migration-input-data label {
+        position: absolute;
+        pointer-events: none;
+        bottom: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        color: #666;
+        font-family: 'Poppins', sans-serif;
+    }
+    .migration-input-data .migration-underline {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        width: 100%;
+    }
+    .migration-input-data .migration-underline:before {
+        position: absolute;
+        content: "";
+        height: 2px;
+        width: 100%;
+        background: #FFAF27;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s ease;
+    }
+    .migration-input-data input:focus ~ .migration-underline:before,
+    .migration-input-data input:valid ~ .migration-underline:before,
+    .migration-input-data select:focus ~ .migration-underline:before,
+    .migration-input-data select:valid ~ .migration-underline:before {
+        transform: scale(1);
+    }
+    .migration-submit-btn {
+        text-align: center;
+        margin-top: 40px;
+    }
+    .migration-submit-btn .migration-input-data {
+        overflow: hidden;
+        height: 45px!important;
+        width: 100%!important;
+        margin: 0 auto;
+        border-radius: 45px;
+    }
+    .migration-submit-btn .migration-input-data .migration-inner {
+        height: 100%;
+        width: 300%;
+        position: absolute;
+        left: -100%;
+        background: -webkit-linear-gradient(right, #ffcb75, #FFAF27, #ffcb75, #FFAF27);
+        transition: all 0.4s;
+    }
+    .migration-submit-btn .migration-input-data:hover .migration-inner {
+        left: 0;
+    }
+    .migration-submit-btn .migration-input-data input {
+        background: #FFAF27;
+        border: none;
+        color: #fff;
+        font-size: 17px;
+        padding: 0;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+        border-radius: 4px;
+    }
+    .migration-submit-btn .migration-input-data input:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+    /* Estilos para mensagens de erro */
+    .error-message {
+        color: #FF0000;
+        font-size: 12px;
+        margin-top: 48px;
+        position: absolute;
+        font-family: 'Poppins', sans-serif;
+        display: none;
+    }
+    .input-error {
+        border-bottom: 2px solid #FF0000 !important;
+    }
+    .input-error ~ label {
+        color: #FF0000 !important;
+    }
+    .input-error ~ .migration-underline:before {
+        background: #FF0000 !important;
+    }
+    /* Estilos para o loader */
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #FFAF27;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: none;
+        margin: 0 auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .submitting .loader {
+        display: block;
+    }
+    .submitting input[type="submit"] {
+        opacity: 0;
+    }
+    @media (max-width: 700px) {
+        .migration-container .migration-text {
+            font-size: 30px;
+        }
+        .migration-container form {
+            padding: 10px 0 0 0;
+        }
+        .migration-container form .migration-form-row {
+            display: block;
+        }
+        .migration-form .migration-form-row .migration-input-data {
+            margin: 35px 0!important;
+        }
+        .migration-submit-btn .migration-input-data {
+            width: 40%!important;
+        }
+        .error-message {
+            margin-top: 42px;
+        }
+    }
+</style>
+<div class="migration-container">
+    <form id="migrationForm" class="migration-form">
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="fullNameError">Por favor, informe seu nome completo</div>
+                <input type="text" id="fullName" name="fullName" required>
+                <div class="migration-underline"></div>
+                <label>Nome Completo</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="emailError">Por favor, informe um e-mail válido</div>
+                <input type="email" id="email" name="email" required>
+                <div class="migration-underline"></div>
+                <label>Seu E-mail</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="whatsappError">Por favor, informe um número de WhatsApp válido</div>
+                <input type="tel" id="whatsapp" name="whatsapp" required>
+                <div class="migration-underline"></div>
+                <label>WhatsApp com DDD</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="helpTypeError">Por favor, selecione uma opção</div>
+                <div class="migration-select-wrapper">
+                    <select required id="helpType">
+                        <option value=""></option>
+                        <option value="1267">Naturalização Brasileira</option>
+                        <option value="1269">Autorização de Residência</option>
+                        <option value="1271">Reconhecimento de Nacionalidade</option>
+                        <option value="1273">Renovação de RNM/RNE</option>
+                        <option value="1275">Visto de Trabalho</option>
+                        <option value="1277">Visto de Estudo</option>
+                        <option value="1279">Visto de Investidor</option>
+                        <option value="1281">Visto de Nômade Digital</option>
+                        <option value="1283">Revalidação de Diploma</option>
+                        <option value="1285">Visto por Aposentadoria</option>
+                        <option value="1287">Outros Assuntos</option>
+                    </select>
+                </div>
+                <div class="migration-underline"></div>
+                <label>Como podemos te ajudar?</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="nationalityError">Por favor, selecione sua nacionalidade</div>
+                <div class="migration-select-wrapper">
+                    <select required id="nationality">
+                        <option value=""></option>
+                        <option value="97">AFEGANISTÃO</option>
+                        <option value="99">ÁFRICA DO SUL</option>
+                        <option value="101">ALBÂNIA</option>
+                        <option value="103">ALEMANHA</option>
+                        <option value="105">ANDORRA</option>
+                        <option value="107">ANGOLA</option>
+                        <option value="109">ANTÍGUA E BARBUDA</option>
+                        <option value="111">ARÁBIA SAUDITA</option>
+                        <option value="113">ARGENTINA</option>
+                        <option value="115">ARMÊNIA</option>
+                        <option value="117">AUSTRÁLIA</option>
+                        <option value="119">AZERBAIJÃO</option>
+                        <option value="121">BAHAMAS</option>
+                        <option value="123">BANGLADESH</option>
+                        <option value="125">BARBADOS</option>
+                        <option value="127">BAHRÉN</option>
+                        <option value="129">BÉLGICA</option>
+                        <option value="131">BELIZE</option>
+                        <option value="133">BENIM</option>
+                        <option value="135">BIELORRÚSSIA</option>
+                        <option value="137">BOLÍVIA</option>
+                        <option value="139">BÓSNIA E HERZEGOVINA</option>
+                        <option value="141">BOTSUANA</option>
+                        <option value="143">BRASIL</option>
+                        <option value="145">BRUNEI</option>
+                        <option value="147">BULGÁRIA</option>
+                        <option value="149">BURKINA FASO</option>
+                        <option value="151">BURUNDI</option>
+                        <option value="153">BUTÃO</option>
+                        <option value="155">CABO VERDE</option>
+                        <option value="157">CAMARÕES</option>
+                        <option value="159">CAMBOJA</option>
+                        <option value="161">CANADÁ</option>
+                        <option value="163">CATAR</option>
+                        <option value="165">CAZAQUISTÃO</option>
+                        <option value="167">CHILE</option>
+                        <option value="169">CHINA</option>
+                        <option value="171">CHIPRE</option>
+                        <option value="173">COLÔMBIA</option>
+                        <option value="175">COMORES</option>
+                        <option value="177">CONGO</option>
+                        <option value="179">COREIA DO NORTE</option>
+                        <option value="181">COREIA DO SUL</option>
+                        <option value="183">COSTA DO MARFIM</option>
+                        <option value="185">COSTA RICA</option>
+                        <option value="187">CROÁCIA</option>
+                        <option value="189">CUBA</option>
+                        <option value="191">DINAMARCA</option>
+                        <option value="193">DOMINICA</option>
+                        <option value="195">EGITO</option>
+                        <option value="197">EL SALVADOR</option>
+                        <option value="199">EMIRADOS ÁRABES UNIDOS</option>
+                        <option value="201">EQUADOR</option>
+                        <option value="203">ERITREIA</option>
+                        <option value="205">ESLOVÁQUIA</option>
+                        <option value="207">ESLOVÊNIA</option>
+                        <option value="209">ESPANHA</option>
+                        <option value="211">ESTADOS UNIDOS</option>
+                        <option value="213">ESTÔNIA</option>
+                        <option value="215">ESWATINI</option>
+                        <option value="217">ETIÓPIA</option>
+                        <option value="219">FIJI</option>
+                        <option value="221">FILIPINAS</option>
+                        <option value="223">FRANÇA</option>
+                        <option value="225">GABÃO</option>
+                        <option value="227">GAMBIA</option>
+                        <option value="229">GANA</option>
+                        <option value="231">GEÓRGIA</option>
+                        <option value="233">GRANADA</option>
+                        <option value="235">GRÉCIA</option>
+                        <option value="237">GUATEMALA</option>
+                        <option value="239">GUIANA</option>
+                        <option value="241">GUIANA FRANCESA</option>
+                        <option value="243">GUINÉ</option>
+                        <option value="245">GUINÉ-BISSAU</option>
+                        <option value="247">GUINÉ-EQUATORIAL</option>
+                        <option value="249">HAITI</option>
+                        <option value="251">HOLANDA</option>
+                        <option value="253">HONDURAS</option>
+                        <option value="255">HUNGRIA</option>
+                        <option value="257">IÊMEN</option>
+                        <option value="259">ILHAS MARSHALL</option>
+                        <option value="261">ILHAS SALOMÃO</option>
+                        <option value="263">ÍNDIA</option>
+                        <option value="265">INDONÉSIA</option>
+                        <option value="267">IRÃ</option>
+                        <option value="269">IRAQUE</option>
+                        <option value="271">IRLANDA</option>
+                        <option value="273">ISLÂNDIA</option>
+                        <option value="275">ISRAEL</option>
+                        <option value="277">ITÁLIA</option>
+                        <option value="279">JAPÃO</option>
+                        <option value="281">JORDÂNIA</option>
+                        <option value="283">KIRIBATI</option>
+                        <option value="285">KUAITE</option>
+                        <option value="287">LAOS</option>
+                        <option value="289">LESOTO</option>
+                        <option value="291">LETÔNIA</option>
+                        <option value="293">LÍBANO</option>
+                        <option value="295">LIBÉRIA</option>
+                        <option value="297">LÍBIA</option>
+                        <option value="299">LIECHTENSTEIN</option>
+                        <option value="301">LITUÂNIA</option>
+                        <option value="303">LUXEMBURGO</option>
+                        <option value="305">MACEDÔNIA DO NORTE</option>
+                        <option value="307">MADAGASCAR</option>
+                        <option value="309">MALÁSIA</option>
+                        <option value="311">MALAUÍ</option>
+                        <option value="313">MALDIVAS</option>
+                        <option value="315">MALI</option>
+                        <option value="317">MALTA</option>
+                        <option value="319">MARROCOS</option>
+                        <option value="321">MAURÍCIO</option>
+                        <option value="323">MAURITÂNIA</option>
+                        <option value="325">MÉXICO</option>
+                        <option value="327">MIANMAR</option>
+                        <option value="329">MICRONÉSIA</option>
+                        <option value="331">MOÇAMBIQUE</option>
+                        <option value="333">MOLDÁVIA</option>
+                        <option value="335">MONTENEGRO</option>
+                        <option value="337">NAMÍBIA</option>
+                        <option value="339">NAURU</option>
+                        <option value="341">NEPAL</option>
+                        <option value="343">NICARÁGUA</option>
+                        <option value="345">NÍGER</option>
+                        <option value="347">NIGÉRIA</option>
+                        <option value="349">NORUEGA</option>
+                        <option value="351">NOVA ZELÂNDIA</option>
+                        <option value="353">OMÃ</option>
+                        <option value="355">PAÍSES BAIXOS</option>
+                        <option value="357">PALAU</option>
+                        <option value="359">PANAMÁ</option>
+                        <option value="361">PAPUA-NOVA GUINÉ</option>
+                        <option value="363">PAQUISTÃO</option>
+                        <option value="365">PARAGUAI</option>
+                        <option value="367">PERU</option>
+                        <option value="369">POLÔNIA</option>
+                        <option value="371">PORTUGAL</option>
+                        <option value="373">QUÊNIA</option>
+                        <option value="375">QUIRGUISTÃO</option>
+                        <option value="377">REINO UNIDO</option>
+                        <option value="379">REPÚBLICA CENTRO-AFRICANA</option>
+                        <option value="381">REPÚBLICA DOMINICANA</option>
+                        <option value="383">REPÚBLICA TCHECA</option>
+                        <option value="385">ROMÊNIA</option>
+                        <option value="387">RUANDA</option>
+                        <option value="389">RÚSSIA</option>
+                        <option value="391">SÃO CRISTÓVÃO E NÉVIS</option>
+                        <option value="393">SÃO MARINO</option>
+                        <option value="395">SÃO TOMÉ E PRÍNCIPE</option>
+                        <option value="397">SANTA LÚCIA</option>
+                        <option value="399">SENEGAL</option>
+                        <option value="401">SEYCHELLES</option>
+                        <option value="403">SERRA LEOA</option>
+                        <option value="405">SINGAPURA</option>
+                        <option value="407">SÍRIA</option>
+                        <option value="409">SOMÁLIA</option>
+                        <option value="411">SRI LANKA</option>
+                        <option value="413">SUAZILÂNDIA</option>
+                        <option value="415">SUDÃO</option>
+                        <option value="417">SUDÃO DO SUL</option>
+                        <option value="419">SUÉCIA</option>
+                        <option value="421">SUÍÇA</option>
+                        <option value="423">SURINAME</option>
+                        <option value="425">TAILÂNDIA</option>
+                        <option value="427">TAIWAN</option>
+                        <option value="429">TAJIQUISTÃO</option>
+                        <option value="431">TANZÂNIA</option>
+                        <option value="433">TIMOR-LESTE</option>
+                        <option value="435">TOGO</option>
+                        <option value="437">TONGA</option>
+                        <option value="439">TRINIDAD E TOBAGO</option>
+                        <option value="441">TUNÍSIA</option>
+                        <option value="443">TURCOMENISTÃO</option>
+                        <option value="445">TURQUIA</option>
+                        <option value="447">TUVALU</option>
+                        <option value="449">UCRÂNIA</option>
+                        <option value="451">UGANDA</option>
+                        <option value="453">URUGUAI</option>
+                        <option value="455">UZBEQUISTÃO</option>
+                        <option value="457">VANUATU</option>
+                        <option value="459">VATICANO</option>
+                        <option value="461">VENEZUELA</option>
+                        <option value="463">VIETNÃ</option>
+                        <option value="465">ZÂMBIA</option>
+                        <option value="467">ZIMBÁBUE</option>
+                    </select>
+                </div>
+                <div class="migration-underline"></div>
+                <label>Qual é a sua nacionalidade?</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="conditionError">Por favor, selecione uma opção</div>
+                <div class="migration-select-wrapper">
+                    <select required id="condition">
+                        <option value=""></option>
+                        <option value="479">Cônjuge ou Filho Brasileiro</option>
+                        <option value="481">Originário de País de Língua Portuguesa</option>
+                        <option value="483">Pai/Mãe Brasileiro</option>
+                        <option value="485">Refugiado(a) Reconhecido pelo Conare</option>
+                        <option value="487">Nenhuma das Condições</option>
+                    </select>
+                </div>
+                <div class="migration-underline"></div>
+                <label>Possui alguma dessas condições?</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="rnmValidityError">Por favor, selecione uma opção</div>
+                <div class="migration-select-wrapper">
+                    <select required id="rnmValidity">
+                        <option value=""></option>
+                        <option value="1333">1 ou 2 anos</option>
+                        <option value="1335">9 anos ou mais</option>
+                        <option value="1337">Indeterminado/Permanente</option>
+                        <option value="2473">15 Anos ou Mais</option>
+                        <option value="1339">Não tenho RNM/RNE</option>
+                    </select>
+                </div>
+                <div class="migration-underline"></div>
+                <label>Qual a validade do seu RNM/RNE atual?</label>
+            </div>
+        </div>
+        <div class="migration-form-row">
+            <div class="migration-input-data">
+                <div class="error-message" id="genderError">Por favor, selecione uma opção</div>
+                <div class="migration-select-wrapper">
+                    <select required id="gender">
+                        <option value=""></option>
+                        <option value="1369">Masculino</option>
+                        <option value="1371">Feminino</option>
+                        <option value="1373">Prefiro não informar</option>
+                    </select>
+                </div>
+                <div class="migration-underline"></div>
+                <label>Qual seu gênero?</label>
+            </div>
+        </div>
+        <div class="migration-form-row migration-submit-btn">
+            <div class="migration-input-data">
+                <div class="migration-inner"></div>
+                <div class="loader"></div>
+                <input type="submit" value="Enviar">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Sistema de proteção contra múltiplas requisições
+    const FormProtection = {
+        isSubmitting: false,
+        submissionTimeout: null,
+        lastSubmissionTime: 0,
+        minTimeBetweenSubmissions: 3000, // 3 segundos entre submissões
+        
+        canSubmit: function() {
+            const now = Date.now();
+            const timeSinceLastSubmit = now - this.lastSubmissionTime;
+            
+            if (this.isSubmitting) {
+                console.log('Formulário já está sendo enviado');
+                return false;
+            }
+            
+            if (timeSinceLastSubmit < this.minTimeBetweenSubmissions) {
+                console.log('Aguarde antes de enviar novamente');
+                return false;
+            }
+            
+            return true;
+        },
+        
+        startSubmission: function() {
+            this.isSubmitting = true;
+            this.lastSubmissionTime = Date.now();
+            
+            // Timeout de segurança: libera após 30 segundos mesmo que algo dê errado
+            this.submissionTimeout = setTimeout(() => {
+                this.endSubmission();
+                console.log('Timeout de submissão atingido - liberando formulário');
+            }, 30000);
+        },
+        
+        endSubmission: function() {
+            this.isSubmitting = false;
+            if (this.submissionTimeout) {
+                clearTimeout(this.submissionTimeout);
+                this.submissionTimeout = null;
+            }
+        }
+    };
+
+    function getUTMParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            utmSource: params.get('utm_source'),
+            utmMedium: params.get('utm_medium'),
+            utmCampaign: params.get('utm_campaign'),
+            utmTerm: params.get('utm_term'),
+            utmContent: params.get('utm_content'),
+        };
+    }
+
+    function getUrlParameter(name) {
+        const searchParams = new URLSearchParams(window.location.search);
+        return searchParams.get(name);
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    function generateLeadId() {
+        let leadId = localStorage.getItem('leadId');
+        if (!leadId) {
+            leadId = 'lead_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('leadId', leadId);
+        }
+        return leadId;
+    }
+    
+    function collectTrackingData() {
+        const trackingData = {
+            fbclid: getUrlParameter('fbclid') || '',
+            gclid: getUrlParameter('gclid') || '',
+            gbraid: getUrlParameter('gbraid') || '',
+            ip: '',
+            userAgent: navigator.userAgent,
+            language: navigator.language || navigator.userLanguage,
+            referrer: document.referrer,
+            fbp: getCookie('_fbp') || '',
+            fbc: getCookie('_fbc') || '',
+            leadId: generateLeadId(),
+            ...getUTMParams()
+        };
+        
+        return trackingData;
+    }
+
+    async function getAllTrackingData() {
+        const trackingData = collectTrackingData();
+        return trackingData;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        function checkSelectValues() {
+            const selects = document.querySelectorAll('.migration-input-data select');
+            selects.forEach(select => {
+                if (select.value) {
+                    select.parentElement.parentElement.querySelector('label').style.transform = 'translateY(-20px)';
+                    select.parentElement.parentElement.querySelector('label').style.fontSize = '14px';
+                    select.parentElement.parentElement.querySelector('label').style.color = '#FFAF27';
+                } else {
+                    select.parentElement.parentElement.querySelector('label').style.transform = '';
+                    select.parentElement.parentElement.querySelector('label').style.fontSize = '';
+                    select.parentElement.parentElement.querySelector('label').style.color = '';
+                }
+            });
+        }
+
+        const selects = document.querySelectorAll('.migration-input-data select');
+        selects.forEach(select => {
+            select.addEventListener('change', function() {
+                checkSelectValues();
+                validateField(this);
+            });
+            select.addEventListener('focus', function() {
+                const underline = this.parentElement.parentElement.querySelector('.migration-underline:before');
+                if (underline) {
+                    underline.style.transform = 'scale(1)';
+                }
+            });
+            select.addEventListener('blur', function() {
+                if (!this.value) {
+                    const underline = this.parentElement.parentElement.querySelector('.migration-underline:before');
+                    if (underline) {
+                        underline.style.transform = 'scaleX(0)';
+                    }
+                }
+                validateField(this);
+            });
+        });
+
+        const inputs = document.querySelectorAll('.migration-input-data input:not([type="submit"])');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            input.addEventListener('input', function() {
+                validateField(this);
+            });
+        });
+
+        function validateField(field) {
+            const id = field.id;
+            const value = field.value.trim();
+            let errorElement = document.getElementById(id + 'Error');
+            let isValid = true;
+            
+            field.classList.remove('input-error');
+            if (errorElement) errorElement.style.display = 'none';
+            
+            switch(id) {
+                case 'fullName':
+                    if (!value || value.length < 3) {
+                        isValid = false;
+                        errorElement.textContent = 'Por favor, informe seu nome completo (mínimo 3 caracteres)';
+                    }
+                    break;
+                case 'email':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!value || !emailRegex.test(value)) {
+                        isValid = false;
+                        errorElement.textContent = 'Por favor, informe um e-mail válido';
+                    }
+                    break;
+                case 'whatsapp':
+                    const phoneRegex = /^\+\d{2}\s\(\d{2}\)\s\d{4,5}-\d{4}$/;
+                    if (!value || !phoneRegex.test(value)) {
+                        isValid = false;
+                        errorElement.textContent = 'Por favor, informe um número de WhatsApp válido (+DD (DD) 9XXXX-XXXX)';
+                    }
+                    break;
+                case 'helpType':
+                case 'nationality':
+                case 'condition':
+                case 'rnmValidity':
+                case 'gender':
+                    if (!value) {
+                        isValid = false;
+                        errorElement.textContent = 'Por favor, selecione uma opção';
+                    }
+                    break;
+            }
+            
+            if (!isValid && errorElement) {
+                field.classList.add('input-error');
+                errorElement.style.display = 'block';
+            }
+            
+            return isValid;
+        }
+
+        function validateForm() {
+            const fields = [
+                document.getElementById('fullName'),
+                document.getElementById('email'),
+                document.getElementById('whatsapp'),
+                document.getElementById('helpType'),
+                document.getElementById('nationality'),
+                document.getElementById('condition'),
+                document.getElementById('rnmValidity'),
+                document.getElementById('gender')
+            ];
+            
+            let isFormValid = true;
+            
+            fields.forEach(field => {
+                if (!validateField(field)) {
+                    isFormValid = false;
+                }
+            });
+            
+            return isFormValid;
+        }
+
+        document.getElementById('whatsapp').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+
+            if (value.length > 13) value = value.slice(0, 13);
+
+            let formatted = '';
+
+            if (value.length > 0) {
+                formatted = '+' + value.substring(0, 2);
+            }
+            if (value.length >= 3) {
+                formatted += ' (' + value.substring(2, 4) + ')';
+            }
+            if (value.length >= 5) {
+                formatted += ' ' + value.substring(4, 9);
+            }
+            if (value.length >= 10) {
+                formatted += '-' + value.substring(9, 13);
+            }
+
+            e.target.value = formatted;
+        });
+
+        checkSelectValues();
+
+        document.getElementById('migrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            // Verificar se pode enviar
+            if (!FormProtection.canSubmit()) {
+                alert('Por favor, aguarde um momento antes de enviar novamente.');
+                return false;
+            }
+            
+            if (!validateForm()) {
+                const firstError = document.querySelector('.input-error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            }
+            
+            // Iniciar proteção
+            FormProtection.startSubmission();
+            
+            // Desabilitar botão e mostrar loader
+            const submitBtn = this.querySelector('input[type="submit"]');
+            const submitContainer = this.querySelector('.migration-submit-btn .migration-input-data');
+            submitBtn.disabled = true;
+            submitContainer.classList.add('submitting');
+            
+            const formData = new FormData(this);
+            const formEntries = {};
+            
+            formData.forEach((value, key) => {
+                formEntries[key] = value;
+            });
+            
+            formEntries.helpType = document.getElementById('helpType').value;
+            formEntries.nationality = document.getElementById('nationality').value;
+            formEntries.condition = document.getElementById('condition').value;
+            formEntries.rnmValidity = document.getElementById('rnmValidity').value;
+            formEntries.gender = document.getElementById('gender').value;
+            
+            let redirectUrl = "https://eumigro.com.br/";
+            
+            const condition = document.getElementById('condition').value;
+            const rnmValidity = document.getElementById('rnmValidity').value;
+            
+            const specialConditions = ['479', '481', '483'];
+            const anyRNMValidity = ['1333', '1335', '1337', '2473', '1339'];
+            
+            if (specialConditions.includes(condition) && anyRNMValidity.includes(rnmValidity)) {
+                redirectUrl = "https://eumigro.com.br/obrigado/";
+            }
+
+            const trackingData = await getAllTrackingData()
+            formEntries.trackingData = trackingData;
+            
+            fetch('https://migro-form-150601789724.europe-west1.run.app', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formEntries),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Mantém a proteção ativa até o redirecionamento
+                window.location.href = redirectUrl;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                
+                // Remover proteção em caso de erro
+                FormProtection.endSubmission();
+                
+                // Reabilitar botão
+                submitBtn.disabled = false;
+                submitContainer.classList.remove('submitting');
+                
+                alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.');
+            });
+        });
+    });
+</script>
