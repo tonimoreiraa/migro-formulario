@@ -611,6 +611,9 @@
                         <option value="483">Pai/Mãe Brasileiro</option>
                         <option value="485">Refugiado(a) Reconhecido pelo Conare</option>
                         <option value="487">Nenhuma das Condições</option>
+                        <option value="3307" class="condition-brazil-only" disabled hidden>Preciso reconhecer minha cidadania Brasileira</option>
+                        <option value="3309" class="condition-brazil-only" disabled hidden>Preciso reconhecer a cidadania de outra pessoa</option>
+                        <option value="3311" class="condition-brazil-only" disabled hidden>Preciso de ajuda com outros assuntos</option>
                     </select>
                 </div>
                 <div class="migration-underline"></div>
@@ -1188,6 +1191,21 @@
 
         initPhonePicker();
         checkSelectValues();
+
+        // Show/hide Brazilian-specific condition options based on nationality
+        function updateBrazilianConditions() {
+            const isBrazilian = document.getElementById('nationality').value === '143';
+            document.querySelectorAll('.condition-brazil-only').forEach(function(opt) {
+                opt.disabled = !isBrazilian;
+                opt.hidden = !isBrazilian;
+            });
+            const condition = document.getElementById('condition');
+            if (!isBrazilian && ['3307', '3309', '3311'].includes(condition.value)) {
+                condition.value = '';
+            }
+        }
+
+        document.getElementById('nationality').addEventListener('change', updateBrazilianConditions);
 
         document.getElementById('migrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
