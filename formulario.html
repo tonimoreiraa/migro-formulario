@@ -1251,11 +1251,15 @@
             
             const condition = document.getElementById('condition').value;
             const rnmValidity = document.getElementById('rnmValidity').value;
-            
+            const nationality = document.getElementById('nationality').value;
+            const isBrazilian = nationality === '143';
+
             const specialConditions = ['479', '481', '483'];
             const anyRNMValidity = ['1333', '1335', '1337', '2473', '1339'];
-            
-            if (specialConditions.includes(condition) && anyRNMValidity.includes(rnmValidity)) {
+
+            if (isBrazilian && condition === '487') {
+                redirectUrl = "https://eumigro.com.br/obrigado/";
+            } else if (!isBrazilian && specialConditions.includes(condition) && anyRNMValidity.includes(rnmValidity)) {
                 redirectUrl = "https://eumigro.com.br/obrigado/";
             }
 
